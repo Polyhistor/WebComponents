@@ -39,10 +39,12 @@
             // add a click listener to the button
             document.getElementById("btnStamp").addEventListener("click", function(e) {
                 // TODO: get the template and modify the content
-
+                var tmpl = document.querySelector("#tmpl")
+                tmpl.content.querySelector("span").textContent = count ++;
                 // TODO: make a deep copy of the template content and import it 
                 // into the current document 
-
+                var newNode = document.importNode(tmpl.content, true)
+                document.getElementById("example").appendChild(newNode);
             })
         });
     </script>
