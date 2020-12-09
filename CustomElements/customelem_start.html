@@ -16,35 +16,53 @@
                 super(); // always call super() first
 
                 // TODO: add a click event to hide the message
+                this.addEventListener("click", e => {
+                    this.visible = false;
+                })
             }
 
             /** TODO: observedAttributes is used to indicate which attributes 
                 will trigger the attributeChangedCallback function **/
-
+            // static get observerdAttributes() {
+            //     return ["visible"]
+            // }
 
             /** Custom element lifecycle functions **/
-            connectedCallback() {
-                console.log("message-banner connected to page");
-                // TODO: set the initial state of the visible property
-            }
+            // connectedCallback() {
+            //     console.log("message-banner connected to page");
+            //     // TODO: set the initial state of the visible property
+            //     this.visible = this.hasAttribute("visible");
+            // }
 
-            disconnectedCallback() {
-                console.log("message-banner disconnected from page");
-            }
+            // disconnectedCallback() {
+            //     console.log("message-banner disconnected from page");
+            // }
 
-            adoptedCallback() {
-                console.log("message-banner adopted in page");                
-            }
+            // adoptedCallback() {
+            //     console.log("message-banner adopted in page");                
+            // }
 
-            attributeChangedCallback(name, oldValue, newValue) {
-                console.log("message-banner attr: " + name + " changed from '"
-                            + oldValue + "' to '" + newValue + "'");
-            }
+            // attributeChangedCallback(name, oldValue, newValue) {
+            //     console.log("message-banner attr: " + name + " changed from '"
+            //                 + oldValue + "' to '" + newValue + "'");
+            // }
 
             /** TODO: Expose the visible attribute as getter and setter **/     
+            get visible() {
+                return this.hasAttribute("visible")
+            }
+
+            set visible(val) {
+                if (val) {
+                    this.setAttribute("visible", "")
+                } else {
+                    this.removeAttribute("visible")
+                }
+            }
         }
 
-        // TODO: define the custom element for the browser
+        // TODO: define the custom element for the browser - the first value is the name, the second value is the constructor
+        customElements.define("message-banner", MessageBanner)
 
         // Programmatically show and hide the banner by setting a property
         window.addEventListener("load", e => {
@@ -52,10 +70,33 @@
                 var banner = document.getElementById("banner");
                 banner.visible = !banner.visible;
             })
+
+            document.getElementById("createbtn").addEventListener('click', e => {
+                var newBanner = document.createElement("message-banner")
+                newBanner.innerHTML = "<div>Created from script!</div>"
+                newBanner.visible = true; 
+                document.body.insertBefore(newBanner, document.body.firstChild)
+            })
         });
     </script>
     <!-- TODO: add some styling for the message banner -->
-    
+    <style>
+        message-banner{
+            background-color: cornsilk;
+            border: 1pt solid goldenrod;
+            margin: 0;
+            max-height: 400px;
+            padding: 10pt;     
+            position: relative;
+            display:none;
+            top:0;
+            right:0
+        }
+        message-banner[visible]{
+            display: block;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -73,7 +114,9 @@
         <!-- new content will be placed into this div -->
         <div id="example">
             <!-- TODO: use our message banner element in the page -->
-
+                <message-banner id="banner" visible>
+                    <div class="message">This is a message banner element. Click on me!</div>
+                </message-banner>
             
             <p>
                 Here is some other text content in the document.
@@ -81,6 +124,7 @@
         </div>
         <p>It can also be manipulated using JavaScript. Click the button to toggle the banner.</p>
         <button id="togglebtn">Toggle Banner</button>
+        <button id="createbtn">Create Banner</button>
     </div>
 </body>
 

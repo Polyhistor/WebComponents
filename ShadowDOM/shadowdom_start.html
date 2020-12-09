@@ -39,6 +39,8 @@
 
                 // TODO: Create a shadow root and then populate it with
                 // the contents of the template that defines the component
+                let shadowRoot = this.attachShadow({mode:'open'})
+                shadowRoot.innerHTML = "<p><slot name='title'>Attention:</slot><slot></slot></p>"
 
                 // TODO: add a click event to hide the message
 
@@ -101,6 +103,7 @@
         <!-- new content will be placed into this div -->
         <div id="example">
             <message-banner id="banner" visible>
+                <span slot="title">Hey there,</span>
                 This is a message banner element
             </message-banner>
             <p>
