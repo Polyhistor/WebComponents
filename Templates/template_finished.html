@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Template Sample</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <!-- Define the template that will hold content. The browser will parse this
+        but will not try to use the content in any way -->
+    <template id="tmpl">
+        <p>This is a new paragraph item: <span></span></p>
+        <script>
+            console.log("Template has been instantiated");
+        </script>
+    </template>
+
+    <!-- Main page content -->
+    <h1>The &lt;template&gt; tag</h1>
+    <div id="content">
+        <p>
+            The <code>&lt;template&gt;</code> tag provides a way of defining content that should be considered separate from
+            the document until it is intentionally created and used.
+        </p>
+        <p>
+            This example uses a template to create content which is then inserted into the div below.
+        </p>
+        <!-- new content will be placed into this div -->
+        <div id="example">
+        </div>
+    </div>
+    <button type="button" id="btnStamp">Stamp New Item</button>
+
+    <script>
+        var count = 1;
+
+        window.addEventListener("DOMContentLoaded", e => {
+            // When the page loads, add a click listener to the button
+            document.getElementById("btnStamp").addEventListener("click", e => {
+                // make a deep copy of the template content and import it 
+                // into the current document 
+                var tmpl = document.getElementById("tmpl");
+                var newNode = document.importNode(tmpl.content, true);
+
+                // modify the content of part of the template
+                newNode.querySelector("span").textContent = count++;
+
+                // insert the new content into the document
+                document.getElementById("example").appendChild(newNode);
+            })
+        });
+    </script>
+</body>
+
+</html>

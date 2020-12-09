@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Shadow DOM Sample</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="../polyfills/webcomponents-lite.js"></script>
+
+    <!-- TODO: define a template to hold our content -->    
+    <template id="message-banner-tmpl">
+        <!-- TODO: add styling to our component -->
+
+        <!-- TODO: define the content structure of the component -->
+    </template>
+
+    <script>
+        class MessageBanner extends HTMLElement {
+            constructor() {
+                super(); // always call super() first
+            }
+
+            /** Used to indicate which attributes will trigger the
+                attributeChangedCallback function **/
+            static get observedAttributes() {
+                return ["visible"];
+            }
+            static get template() {
+                if (!this._template) {
+                    this._template = document.querySelector("#message-banner-tmpl");
+                }
+                return this._template;
+            }
+            /** Custom Component Reactions **/
+            connectedCallback() {
+                console.log("message-banner connected to page");
+
+                // TODO: Create a shadow root and then populate it with
+                // the contents of the template that defines the component
+
+                // TODO: add a click event to hide the message
+
+                // If the browser doesn't natively support ShadowDOM, we have
+                // to polyfill the styling mechanism for the component
+                const supportsNativeShadowDOM = !!HTMLElement.prototype.attachShadow;
+                if (!supportsNativeShadowDOM) {
+                    ShadyCSS.applyStyle(this);
+                }
+            }
+
+            disconnectedCallback() {
+                console.log("message-banner disconnected from page");
+            }
+
+            adoptedCallback() {
+                console.log("message-banner adopted in page");
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                console.log("message-banner attr: " + name + " changed from '" +
+                    oldValue + "' to '" + newValue + "'");
+            }
+
+            /** Expose the visible attribute as getter and setter **/
+            get visible() {
+                return this.hasAttribute('visible');
+            }
+
+            set visible(val) {
+                if (val) {
+                    this.setAttribute('visible', '');
+                } else {
+                    this.removeAttribute('visible');
+                }
+            }
+        }
+
+        // This is only needed for browsers that don't yet have native ShadowDOM 
+        // support. When native support is present this call does nothing
+        ShadyCSS.prepareTemplate(MessageBanner.template, "message-banner");
+
+        customElements.define("message-banner", MessageBanner);
+
+        // Programmatically show and hide the banner by setting a property
+        window.addEventListener("load", e => {
+            document.getElementById("btn").addEventListener("click", evt => {
+                document.getElementById("banner").visible = !document.getElementById("banner").visible;
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Using ShadowDOM</h1>
+    <div id="content">
+        <p>
+            ShadowDOM
+        </p>
+        <!-- new content will be placed into this div -->
+        <div id="example">
+            <message-banner id="banner" visible>
+                This is a message banner element
+            </message-banner>
+            <p>
+                Here is some other content in the document.
+            </p>
+        </div>
+        <button id="btn">Toggle Banner</button>
+    </div>
+</body>
+
+</html>
