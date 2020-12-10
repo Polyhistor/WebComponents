@@ -12,8 +12,43 @@
     <!-- TODO: define a template to hold our content -->    
     <template id="message-banner-tmpl">
         <!-- TODO: add styling to our component -->
+        <style>
+            :host {
+                background: cornsilk; 
+                border: 1pt solid goldenrod;
+                margin: 0;
+                max-height: 400px;
+                padding: 15px;
+                position: relative;
+                top:0;
+                right:0;
+                display:none;
+            }
 
+            :host([visible]) {
+                display:block;
+            }
+
+            :host([type="critical"]){
+                background: red;
+                border: 1pt solid maroon;
+                color:white;
+                font-weight: 600;
+            }
+
+            :host #closebox {
+                cursor: pointer;
+            }
+
+            #example {
+                color:blue;
+            }
+        </style>
         <!-- TODO: define the content structure of the component -->
+        <div id="example" class="message">
+            <span id="closeBox">[x] </span>
+            <slot></slot>
+        </div>
     </template>
 
     <script>
@@ -40,9 +75,14 @@
                 // TODO: Create a shadow root and then populate it with
                 // the contents of the template that defines the component
                 let shadowRoot = this.attachShadow({mode:'open'})
-                shadowRoot.innerHTML = "<p><slot name='title'>Attention:</slot><slot></slot></p>"
+                let tmpl = document.querySelector("#message-banner-tmpl")
+                shadowRoot.appendChild(document.importNode(tmpl.content, true))
 
                 // TODO: add a click event to hide the message
+                var closeBox = shadowRoot.querySelector("#closeBox")
+                closeBox.addEventListener("click", evt => {
+                    this.visible = false;
+                })
 
                 // If the browser doesn't natively support ShadowDOM, we have
                 // to polyfill the styling mechanism for the component
@@ -92,6 +132,13 @@
             })
         });
     </script>
+    <!-- <style>
+        message-banner {
+            color: red;
+            background-color: white;
+            display: block;
+        }
+    </style> -->
 </head>
 
 <body>
